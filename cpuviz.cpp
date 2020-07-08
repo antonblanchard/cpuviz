@@ -22,6 +22,8 @@
 
 #define FPS 24
 
+#define STATBUFSIZE (128*1024)
+
 static unsigned int round_closest(unsigned int dividend, unsigned int divisor)
 {
 	return (dividend + (divisor / 2)) / divisor;
@@ -32,6 +34,11 @@ Widget::Widget(unsigned long xlenIn, unsigned long ylenIn, QWidget *parent) :
 {
 	statF = fopen("/proc/stat", "r");
 	assert(statF);
+
+	statbuf = (char *)malloc(STATBUFSIZE);
+	assert(statbuf);
+	memset(statbuf, 0, STATBUFSIZE);
+	setbuffer(statF, statbuf, STATBUFSIZE);
 
 	QTimer *timer = new QTimer(this);
 	connect(timer, &QTimer::timeout, this, QOverload<>::of(&Widget::update));
@@ -47,6 +54,7 @@ Widget::Widget(unsigned long xlenIn, unsigned long ylenIn, QWidget *parent) :
 Widget::~Widget()
 {
 	fclose(statF);
+	free(statbuf);
 }
 
 void Widget::parseStat(void)

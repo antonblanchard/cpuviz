@@ -21,11 +21,12 @@ class Widget : public QWidget
     private:
         void parseStat(void);
         FILE *statF;
+        char *statbuf;
         uint64_t cpus_prev_busy_total[MAX_CPUS];
         uint64_t cpus_prev_total[MAX_CPUS];
         unsigned short cpus_busy[MAX_CPUS];
-	unsigned long xlen;
-	unsigned long ylen;
+        unsigned long xlen;
+        unsigned long ylen;
 };
 
 #endif // WIDGET_H
